@@ -14,5 +14,37 @@
 	& > .fa {
 		color: white;
 		font-size: 3.5rem;
+		display: none;
+	}
+
+	//card open
+	&__open {
+		background-color: $color-open;
+		& > .fa {
+			display: block;
+		}
+	}
+	//card close
+	&__close {
+		background-color: $color-grey-dark;
+		& > .fa {
+			display: none;
+		}
+	}
+
+	//card match
+	&__match {
+		background-color: $color-match;
+		& > .fa {
+			display: block;
+		}
+	}
+
+	//card wrong
+	&__wrong {
+		background-color: $color-wrong;
+		& > .fa {
+			display: block;
+		}
 	}
 }
