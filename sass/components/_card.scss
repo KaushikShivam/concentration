@@ -1,0 +1,17 @@
+.card {
+	width: 12.5rem;
+	height: 12.5rem;
+	background-color: $color-grey-dark;
+	border-radius: 10px;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	box-shadow: $shadow-dark;
+
+	& > .fa {
+		color: white;
+		font-size: 3.5rem;
+	}
+}

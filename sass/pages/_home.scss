@@ -1,0 +1,21 @@
+.section-deck {
+	display: flex;
+	justify-content: center;
+
+	&__grid {
+		display: grid;
+		grid-template-rows: repeat(4, minmax(12.5rem, min-content));
+		grid-template-columns: repeat(4, minmax(12.5rem, min-content));
+		grid-gap: 4rem;
+
+		box-shadow: $shadow-dark;
+		padding: 4rem 4rem;
+		background-color: white;
+		border-radius: 10px;
+		background-image: linear-gradient(
+			to right bottom,
+			$color-primary,
+			$color-secondary
+		);
+	}
+}
