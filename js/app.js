@@ -1,22 +1,16 @@
-// const cards = [
-// 	'fa-diamond',
-// 	'fa-paper-plane-o',
-// 	'fa-anchor',
-// 	'fa-bolt',
-// 	'fa-cube',
-// 	'fa-anchor',
-// 	'fa-leaf',
-// 	'fa-bicycle',
-// 	'fa-diamond',
-// 	'fa-bomb',
-// 	'fa-leaf',
-// 	'fa-bomb',
-// 	'fa-bolt',
-// 	'fa-bicycle',
-// 	'fa-paper-plane-o',
-// 	'fa-cube'
-// ];
+//Global Variables
 
+const deck = document.querySelector('.section-deck__grid');
+const cardOpen = 'card__open';
+const cardClose = 'card__close';
+const cardMatch = 'card__match';
+const cardWrong = 'card__wrong';
+
+let openCards = [];
+
+/*
+ * Create a list that holds all of your cards
+ */
 let cards = [
 	{ id: 'card-1_a', name: 'fa-diamond', isOpen: false, isMatched: false },
 	{ id: 'card-2_a', name: 'fa-paper-plane-o', isOpen: false, isMatched: false },
@@ -36,13 +30,13 @@ let cards = [
 	{ id: 'card-8_b', name: 'fa-bomb', isOpen: false, isMatched: false }
 ];
 
-const deck = document.querySelector('.section-deck__grid');
-const cardOpen = 'card__open';
-const cardClose = 'card__close';
-const cardMatch = 'card__match';
-const cardWrong = 'card__wrong';
+/*
+ * Display the cards on the page
+ *   - shuffle the list of cards using the provided "shuffle" method below
+ *   - loop through each card and create its HTML
+ *   - add each card's HTML to the page
+ */
 
-//Shuffles the cards
 function shuffle(array) {
 	var currentIndex = array.length,
 		temporaryValue,
@@ -57,31 +51,6 @@ function shuffle(array) {
 	}
 
 	return array;
-}
-
-//TODO: should run when the browser loads as well as retartings
-function startGame() {
-	//Have to remove previous cards
-	removeOldDeck();
-	//Shuffle cards
-	cards = shuffle(cards);
-
-	//default all cards to begining
-	setDefaultCardState(cards);
-
-	//Add new cards
-	addCardsToDeck(cards);
-}
-
-function removeOldDeck() {
-	deck.textContent = '';
-}
-
-function setDefaultCardState(cards) {
-	for (let i = 0; i < cards.length; i++) {
-		cards[i].isOpen = false;
-		cards[i].isMatched = false;
-	}
 }
 
 function addCardsToDeck(cards) {
@@ -100,33 +69,100 @@ function addCardsToDeck(cards) {
 	deck.appendChild(domFragment);
 }
 
-//card clicking method
+/*
+ * Start a new game
+ *   - Remove the previous game state
+ *   - restart the game with new state
+ */
+
+//TODO: should run when the browser loads as well as retarting
+function startGame() {
+	//Have to remove previous cards
+	removeOldDeck();
+	//default all cards to begining
+	setDefaultCardState(cards);
+	//Shuffle cards
+	cards = shuffle(cards);
+	//Add new cards
+	addCardsToDeck(cards);
+}
+
+function removeOldDeck() {
+	deck.textContent = '';
+}
+
+function setDefaultCardState(cards) {
+	for (let i = 0; i < cards.length; i++) {
+		cards[i].isOpen = false;
+		cards[i].isMatched = false;
+	}
+}
+
+/*
+ * set up the event listener for a card. If a card is clicked:
+ *  - display the card's symbol (put this functionality in another function that you call from this one)
+ *  - add the card to a *list* of "open" cards (put this functionality in another function that you call from this one)
+ *  - if the list already has another card, check to see if the two cards match
+ *    + if the cards do match, lock the cards in the open position (put this functionality in another function that you call from this one)
+ *    + if the cards do not match, remove the cards from the list and hide the card's symbol (put this functionality in another function that you call from this one)
+ *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
+ *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
+ */
+
+//set up the event listener for a card. If a card is clicked:
 deck.addEventListener('click', function(event) {
 	if (event.target.classList.contains('card')) {
 		let card = event.target;
-		// card.classList.add(cardOpen);
-		openCard(card);
+		//let cardID = extractCardID()
+		if (!card.classList.contains(cardMatch)) {
+			openCard(card);
+			addOpenCardToList(card);
+			handleCardMatching(card);
+		}
 	}
 });
 
-function openCard(selectedCard) {
-	let cardClasses = selectedCard.classList;
-	// Use spread operator to concert DOMTokenList to array. Alternatively, use DOMTokenList.contains method
-	let cardID = calculateCardID([...cardClasses]);
-
-	// cards.find((card, index) => {
-	// 	if (card.id == cardID) {
-	// 		if (!card.isOpen) {
-	// 			cards[index].isOpen = true;
-	// 			return true;
-	// 		}
-	// 	}
-	// });
-
-	// card.classList.add(cardOpen);
+//display the card's symbol
+function openCard(card) {
+	card.classList.remove(cardClose);
+	card.classList.add(cardOpen);
 }
 
-function calculateCardID(cardClasses) {
+//add the card to a *list* of "open" cards
+function addOpenCardToList(card) {
+	openCards.push(card);
+}
+
+//if the list already has another card, check to see if the two cards match
+function handleCardMatching() {
+	//if the list already has another card
+	if (openCards.length > 1) {
+		matchCards(openCards);
+	}
+}
+
+function matchCards(cardsToMatch) {
+	const oldCard = cardsToMatch[0];
+	const newCard = cardsToMatch[1];
+
+	const oldCardID = extractCardID(oldCard);
+	const newCardID = extractCardID(newCard);
+
+	//Matching ID prefix (ex: card-1)
+	const matchID = newCardID.split('_')[0];
+
+	if (oldCardID.includes(matchID) && newCardID.includes(matchID)) {
+		//they are a match
+		updateMatchedCards(oldCard, newCard);
+	} else {
+		removeUnmatchedCards(oldCard, newCard);
+	}
+}
+
+function extractCardID(card) {
+	// Using spread operator to concert DOMTokenList to array. Alternatively, use DOMTokenList.contains method
+	const cardClasses = [...card.classList];
+
 	let cardID;
 	for (let i = 0; i < cardClasses.length; i++) {
 		if (cardClasses[i].includes('card-')) {
@@ -137,8 +173,39 @@ function calculateCardID(cardClasses) {
 	return '';
 }
 
-function isAlreadyOpen(cardID) {}
+function removeUnmatchedCards(oldCard, newCard) {
+	oldCard.classList.add(cardWrong);
+	newCard.classList.add(cardWrong);
 
-//last count check
-//card open logic
-//card match logic
+	setTimeout(() => {
+		oldCard.classList.remove(cardWrong);
+		newCard.classList.remove(cardWrong);
+		oldCard.classList.add(cardClose);
+		newCard.classList.add(cardClose);
+
+		openCards.length = 0;
+	}, 500);
+}
+
+function updateMatchedCards(oldCard, newCard) {
+	//update dom
+	oldCard.classList.add(cardMatch);
+	newCard.classList.add(cardMatch);
+
+	//update data source
+	updateCardsDataSource(oldCard);
+	updateCardsDataSource(newCard);
+
+	//set open cards to default
+	openCards.length = 0;
+}
+
+function updateCardsDataSource(card) {
+	const cardID = extractCardID(card);
+	for (let i = 0; i < cards.length; i++) {
+		if (cards[i].id === cardID && cards[i].isOpen === false) {
+			cards[i].isOpen = true;
+			return;
+		}
+	}
+}
