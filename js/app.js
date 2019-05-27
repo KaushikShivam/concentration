@@ -2,7 +2,10 @@
 
 const deck = document.querySelector('.section-deck__grid');
 const counter = document.querySelector('.counter');
+const ratingLabel = document.querySelector('.rating');
+
 let attempts = 0;
+let rating = 3;
 
 const cardOpen = 'card__open';
 const cardClose = 'card__close';
@@ -91,6 +94,8 @@ function startGame() {
 
 	openCards.length = 0;
 	attempts = 0;
+	rating = 3;
+	updateRatingDom();
 }
 
 function removeOldDeck() {
@@ -170,6 +175,9 @@ function matchCards(cardsToMatch) {
 		removeUnmatchedCards(oldCard, newCard);
 	}
 	updateAttemptCounter();
+
+	//update Rating
+	updateRating();
 }
 
 function extractCardID(card) {
@@ -232,4 +240,19 @@ function isGameOver() {
 	return cards.every(card => {
 		return card.isMatched;
 	});
+}
+
+function updateRating() {
+	if (attempts <= 10) {
+		rating = 3;
+	} else if (attempts > 10 && attempts <= 20) {
+		rating = 2;
+	} else {
+		rating = 1;
+	}
+	updateRatingDom();
+}
+
+function updateRatingDom() {
+	ratingLabel.textContent = `Rating: ${rating} stars`;
 }
