@@ -88,6 +88,9 @@ function startGame() {
 	cards = shuffle(cards);
 	//Add new cards
 	addCardsToDeck(cards);
+
+	openCards.length = 0;
+	attempts = 0;
 }
 
 function removeOldDeck() {
