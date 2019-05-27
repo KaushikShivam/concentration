@@ -15,22 +15,22 @@ let openCards = [];
  * Create a list that holds all of your cards
  */
 let cards = [
-	{ id: 'card-1_a', name: 'fa-diamond', isOpen: false, isMatched: false },
-	{ id: 'card-2_a', name: 'fa-paper-plane-o', isOpen: false, isMatched: false },
-	{ id: 'card-3_a', name: 'fa-anchor', isOpen: false, isMatched: false },
-	{ id: 'card-4_a', name: 'fa-bolt', isOpen: false, isMatched: false },
-	{ id: 'card-5_a', name: 'fa-cube', isOpen: false, isMatched: false },
-	{ id: 'card-6_a', name: 'fa-leaf', isOpen: false, isMatched: false },
-	{ id: 'card-7_a', name: 'fa-bicycle', isOpen: false, isMatched: false },
-	{ id: 'card-8_a', name: 'fa-bomb', isOpen: false, isMatched: false },
-	{ id: 'card-1_b', name: 'fa-diamond', isOpen: false, isMatched: false },
-	{ id: 'card-2_b', name: 'fa-paper-plane-o', isOpen: false, isMatched: false },
-	{ id: 'card-3_b', name: 'fa-anchor', isOpen: false, isMatched: false },
-	{ id: 'card-4_b', name: 'fa-bolt', isOpen: false, isMatched: false },
-	{ id: 'card-5_b', name: 'fa-cube', isOpen: false, isMatched: false },
-	{ id: 'card-6_b', name: 'fa-leaf', isOpen: false, isMatched: false },
-	{ id: 'card-7_b', name: 'fa-bicycle', isOpen: false, isMatched: false },
-	{ id: 'card-8_b', name: 'fa-bomb', isOpen: false, isMatched: false }
+	{ id: 'card-1_a', name: 'fa-diamond', isMatched: false },
+	{ id: 'card-2_a', name: 'fa-paper-plane-o', isMatched: false },
+	{ id: 'card-3_a', name: 'fa-anchor', isMatched: false },
+	{ id: 'card-4_a', name: 'fa-bolt', isMatched: false },
+	{ id: 'card-5_a', name: 'fa-cube', isMatched: false },
+	{ id: 'card-6_a', name: 'fa-leaf', isMatched: false },
+	{ id: 'card-7_a', name: 'fa-bicycle', isMatched: false },
+	{ id: 'card-8_a', name: 'fa-bomb', isMatched: false },
+	{ id: 'card-1_b', name: 'fa-diamond', isMatched: false },
+	{ id: 'card-2_b', name: 'fa-paper-plane-o', isMatched: false },
+	{ id: 'card-3_b', name: 'fa-anchor', isMatched: false },
+	{ id: 'card-4_b', name: 'fa-bolt', isMatched: false },
+	{ id: 'card-5_b', name: 'fa-cube', isMatched: false },
+	{ id: 'card-6_b', name: 'fa-leaf', isMatched: false },
+	{ id: 'card-7_b', name: 'fa-bicycle', isMatched: false },
+	{ id: 'card-8_b', name: 'fa-bomb', isMatched: false }
 ];
 
 /*
@@ -96,7 +96,6 @@ function removeOldDeck() {
 
 function setDefaultCardState(cards) {
 	for (let i = 0; i < cards.length; i++) {
-		cards[i].isOpen = false;
 		cards[i].isMatched = false;
 	}
 }
@@ -121,6 +120,13 @@ deck.addEventListener('click', function(event) {
 			openCard(card);
 			addOpenCardToList(card);
 			handleCardMatching(card);
+		}
+
+		if (isGameOver()) {
+			//show a pop up
+			//make a pop up in css and invoke it here
+			//start a game
+			// pop up should have the option to start the game
 		}
 	}
 });
@@ -207,8 +213,8 @@ function updateMatchedCards(oldCard, newCard) {
 function updateCardsDataSource(card) {
 	const cardID = extractCardID(card);
 	for (let i = 0; i < cards.length; i++) {
-		if (cards[i].id === cardID && cards[i].isOpen === false) {
-			cards[i].isOpen = true;
+		if (cards[i].id === cardID && cards[i].isMatched === false) {
+			cards[i].isMatched = true;
 			return;
 		}
 	}
@@ -217,4 +223,10 @@ function updateCardsDataSource(card) {
 function updateAttemptCounter() {
 	attempts += 1;
 	counter.textContent = `Attempts: ${attempts}`;
+}
+
+function isGameOver() {
+	return cards.every(card => {
+		return card.isMatched;
+	});
 }
