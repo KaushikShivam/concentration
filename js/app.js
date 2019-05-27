@@ -1,6 +1,9 @@
 //Global Variables
 
 const deck = document.querySelector('.section-deck__grid');
+const counter = document.querySelector('.counter');
+let attempts = 0;
+
 const cardOpen = 'card__open';
 const cardClose = 'card__close';
 const cardMatch = 'card__match';
@@ -157,6 +160,7 @@ function matchCards(cardsToMatch) {
 	} else {
 		removeUnmatchedCards(oldCard, newCard);
 	}
+	updateAttemptCounter();
 }
 
 function extractCardID(card) {
@@ -208,4 +212,9 @@ function updateCardsDataSource(card) {
 			return;
 		}
 	}
+}
+
+function updateAttemptCounter() {
+	attempts += 1;
+	counter.textContent = `Attempts: ${attempts}`;
 }
